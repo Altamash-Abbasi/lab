@@ -1,5 +1,4 @@
-
-
+import java.lang.reflect.*;
 class Student {
     private String name;
     private Integer rollNo;
@@ -8,8 +7,8 @@ class Student {
 
    
     public Boolean compare(Student s1, Student s2) {
-        double m1 = s1.cgpa; // Unboxing
-        double m2 = s2.cgpa; // Unboxing
+        double m1 = s1.cgpa; 
+        double m2 = s2.cgpa; 
         return m1 == m2;
     }
 
@@ -21,7 +20,7 @@ class Student {
             System.out.println("Wrapper objects are NOT equal (==)");
     }
 
-    // Demonstrates behavior of == with primitives
+    
     public static void behaviorPrimitive(int r1, int r2) {
         if (r1 == r2)
             System.out.println("Primitive values are equal (==)");
@@ -52,7 +51,7 @@ class Student {
     public void calculateAggregateMarks(String studentName, Double... subjectMarks) {
         double total = 0;
         for (Double mark : subjectMarks) {
-            total += mark; // Auto-unboxing
+            total += mark; 
         }
         double avg = subjectMarks.length > 0 ? total / subjectMarks.length : 0;
         System.out.println("\n" + studentName + "'s Aggregate Marks: " + avg);
@@ -94,7 +93,7 @@ class Student {
 
         public int getGradePoint() { return gradePoint; }
 
-        // Method to determine grade from marks
+        
         public static Grade marksToGrade(int marks) {
             if (marks >= 91) return O;
             else if (marks >= 81) return A_PLUS;
@@ -105,12 +104,34 @@ class Student {
             else return F;
         }
     }
+	static public void re(Object o){
+		Class c=o.getClass();
+		System.out.println("Name of the class is "+c.getName());
+		for(Field f:c.getDeclaredFields())
+			System.out.println("Fields in class: "+f);
+		for(Constructor c1:c.getDeclaredConstructors())
+			System.out.println("Constructor in class: "+c1);
+		for(Method m:c.getDeclaredMethods())
+			System.out.println("Methods in class: "+m);
+		for(Field f:c.getDeclaredFields()){
+			Class g=f.getType();
+			if(g.equals(Integer.class) || g.equals(Double.class) || g.equals(Boolean.class)) System.out.println("it is a wrapper class "+g.getName());
+		}
+        for(Method m:c.getDeclaredMethods()){
+            if(m.getName().startsWith("get") && m.getParameterCount()==0){
+                System.out.println("List of getters: "+m.getName());
+            }
+            if(m.getName().startsWith("set"))
+            System.out.println("List of setters: "+m.getName());
+        }
+			
+	}
 }
 
 
 public class Management extends Student {
     public static void main(String[] args) {
-        // Wrapper & Primitive Comparison
+        
         Student s1 = new Student();
         Student s2 = new Student();
 
@@ -120,31 +141,45 @@ public class Management extends Student {
         behaviorPrimitive(63, 63);
         behaviorWrapper(s1.getRollNo(), s2.getRollNo());
 
-        // Varargs Demonstration
+        
         s1.setName("Altamash");
         s2.setName("Ayaan");
         s1.calculateAggregateMarks("Altamash", 88.5, 92.0, 79.0, 85.0);
         s1.addMultipleStudents(s1, s2);
 
-        // Enum Demonstration (Department)
+       
         Department dept = Department.CSE;
         System.out.println("\nDepartment: " + dept + " | Code: " + dept.getCode() + " | HOD: " + dept.getHod());
 
-        // Enum Demonstration (Grade)
+       
         int marks = 87;
         Grade g = Grade.marksToGrade(marks);
 
         System.out.println("\nMarks: " + marks + " | Grade: " + g + " | Grade Points: " + g.getGradePoint());
 
-        // Enum in switch-case
+        
         switch (g) {
-            case O -> System.out.println("Excellent! Marks between 91–100");
-            case A_PLUS -> System.out.println("Very Good! Marks between 81–90");
-            case A -> System.out.println("Good! Marks between 71–80");
-            case B_PLUS -> System.out.println("Above Average! Marks between 61–70");
-            case B -> System.out.println("Average! Marks between 51–60");
-            case C -> System.out.println("Below Average! Marks between 41–50");
-            case F -> System.out.println("Fail! Marks below 40");
+            case O:
+					System.out.println("Excellent! Marks between 91–100");
+					break;
+            case A_PLUS: 
+					System.out.println("Very Good! Marks between 81–90");
+					break;
+            case A :
+					System.out.println("Good! Marks between 71–80");
+					break;
+            case B_PLUS :
+					System.out.println("Above Average! Marks between 61–70");
+					break;
+            case B :
+					System.out.println("Average! Marks between 51–60");
+					break;
+            case C :
+					System.out.println("Below Average! Marks between 41–50");
+					break;
+            case F :
+				System.out.println("Fail! Marks below 40");
         }
+		re(s1);
     }
 }

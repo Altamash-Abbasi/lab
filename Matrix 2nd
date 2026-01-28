@@ -1,0 +1,215 @@
+import java.util.Scanner;
+class Matrix {
+    Scanner sc=new Scanner(System.in);
+    int m,n;
+    float[][] matrix;
+
+    Matrix(int m,int n){
+        this.m=m;
+        this.n=n;
+        matrix=new float[m][n];
+    }
+
+    void read(){
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                matrix[i][j]=sc.nextInt();
+            }
+        }
+    }
+
+    void print(){
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                System.out.print(matrix[i][j]+"\t");
+            }
+            System.out.println();
+        }
+    }
+
+    void add(Matrix mat2){
+        if(this.m !=mat2.m || this.n!=mat2.n){
+            System.out.println("Matrices are not of same order");
+            return ;
+        }
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                System.out.print(matrix[i][j]+mat2.matrix[i][j]+"\t");
+            }
+            System.out.println();
+        }
+    }
+
+    void multiplication(Matrix mat2){
+        if(this.n!=mat2.m){
+            System.out.println("Matrices can't be multiplied");
+            return ;
+        }
+        for(int i=0;i<this.m;i++){
+            for(int j=0;j<mat2.n;j++){
+                float sum=0;
+                for(int k=0;k<this.n;k++){
+                    sum=sum+matrix[i][k]*mat2.matrix[k][j];
+                }
+                System.out.print(sum+"\t");
+            }
+            System.out.println();
+        }
+    }
+
+    void determinent(){
+        float detfact=1;
+        if(m!=n){
+            System.out.println("Matrix is not a square Matrix");
+            return ;
+        }
+
+        for(int i=0;i<m;i++){
+            if(matrix[i][i]==0){
+                boolean swap=false;
+                for(int k=i+1;k<n;k++){
+
+                    if(matrix[k][i]!=0){
+                        detfact=detfact*-1;
+                        float[] temp=matrix[i];
+                        matrix[i]=matrix[k];
+                        matrix[k]=temp;
+                        swap=true;
+                        break;
+                    }
+                    }
+                     if(swap!=true) {
+                        System.out.println("Determinant is 0");
+                        return ;
+
+                }
+            }
+            
+            for(int j=i+1;j<n;j++){
+                float fact=matrix[j][i]/matrix[i][i];
+                for(int k=i;k<n;k++){
+                    matrix[j][k]=matrix[j][k]-fact*matrix[i][k];
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            detfact=detfact*matrix[i][i];
+        }
+        System.out.println("Determinant is "+detfact);
+    }
+
+    void inverse(){
+        if(m != n){
+        System.out.println("Inverse not possible because Matrix is not square");
+        return;
+    }
+
+    int size = m;
+    float[][] identity = new float[size][size];
+
+    for(int i=0;i<size;i++){
+        for(int j=0;j<size;j++){
+            if(i == j)
+                identity[i][j] = 1;
+            else
+                identity[i][j] = 0;
+        }
+    }
+
+    for(int i=0;i<size;i++){
+
+        if(matrix[i][i] == 0){
+            boolean swap = false;
+            for(int k=i+1;k<size;k++){
+                if(matrix[k][i] != 0){
+                    float[] temp = matrix[i];
+                    matrix[i] = matrix[k];
+                    matrix[k] = temp;
+
+                    float[] tempId = identity[i];
+                    identity[i] = identity[k];
+                    identity[k] = tempId;
+
+                    swap = true;
+                    break;
+                }
+            }
+            if(swap == false){
+                System.out.println("Inverse does not exist");
+                return;
+            }
+        }
+
+        //diago 1
+        float diag = matrix[i][i];
+        for(int j=0;j<size;j++){
+            matrix[i][j] = matrix[i][j] / diag;
+            identity[i][j] = identity[i][j] / diag;
+        }
+
+        // Making other elements of column zero
+        for(int k=0;k<size;k++){
+            if(k != i){
+                float fact = matrix[k][i];
+                for(int j=0;j<size;j++){
+                    matrix[k][j] = matrix[k][j] - fact * matrix[i][j];
+                    identity[k][j] = identity[k][j] - fact * identity[i][j];
+                }
+            }
+        }
+    }
+
+   
+    for(int i=0;i<size;i++){
+        for(int j=0;j<size;j++){
+            System.out.print(identity[i][j] + "\t");
+        }
+        System.out.println();
+    }
+    }
+}
+public class Main{
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter order of first Matrix");
+        int row=sc.nextInt();
+        int col=sc.nextInt();
+
+        Matrix obj=new Matrix(row,col);
+        System.out.println("Enter order of second Matrix");
+        row=sc.nextInt();
+        col=sc.nextInt();
+        Matrix obj2=new Matrix(row,col);
+
+        System.out.println("Enter the Element of first Matrix");
+        obj.read();
+
+        System.out.println("\nEnter the Element of second Matrix");
+        obj2.read();
+
+        System.out.println("\n\n\nPrinting the first Matrix\n");
+        obj.print();
+
+        System.out.println("\n\n\nPrinting the second Matrix\n");
+        obj2.print();
+        
+        System.out.println("\n\n\nPrinting sum of both Matrices");
+        obj.add(obj2);
+
+        System.out.println("\n\n\nPrinting the matrix multiplication");
+        obj.multiplication(obj2);
+
+        System.out.println("\n\n\nInverse of first Matrix");
+        obj.inverse();
+
+        System.out.println("\n\n\nInverse of second Matrix");
+        obj2.inverse();
+
+        System.out.println("\n\n\nPrinting determinant of 1st Matrix");
+        obj.determinent();
+
+        System.out.println("\n\n\nPrinting determinant of second matrix");
+        obj2.determinent();
+
+    }
+}

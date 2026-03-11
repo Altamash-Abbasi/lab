@@ -52,6 +52,13 @@ class CircularQueue<T> {
     public int size() {
         return size;
     }
+        @SuppressWarnings("unchecked")
+    public T getRear() {
+        if (isEmpty()) {
+            throw new RuntimeException("Queue is Empty");
+        }
+        return (T) arr[rear];
+    }
 }
 
 
@@ -61,31 +68,77 @@ public class QueueApplications {
     public static boolean railroadRearrangement(int[] input) {
 
         int n = input.length;
-        CircularQueue<Integer> holdingTrack = new CircularQueue<>(n);
-        int expected = 1;
-        int i = 0;
+        int k = 4; // number of holding tracks
 
-        while (i < n) {
+        CircularQueue<Integer>[] track = new CircularQueue[k];
+        for (int i = 0; i < k; i++) {
+            track[i] = new CircularQueue<>(n);
+        }
 
-            if (input[i] == expected) {
-                System.out.println("Move car " + input[i] + " to output");
-                expected++;
-                i++;
+        int nextCarToOutput = 1;
+
+        for (int i = 0; i < n; i++) {
+
+            if (input[i] == nextCarToOutput) {
+
+                System.out.println("Move car " + input[i] + " from input track to output track");
+                nextCarToOutput++;
+
+                boolean moved;
+
+                do {
+                    moved = false;
+
+                    for (int j = 0; j < k; j++) {
+
+                        if (!track[j].isEmpty() &&
+                                track[j].peek() == nextCarToOutput) {
+
+                            System.out.println("Move car " + track[j].dequeue() +
+                                    " from holding track " + (j + 1) + " to output track");
+
+                            nextCarToOutput++;
+                            moved = true;
+                            j = -1; // restart checking tracks
+                        }
+                    }
+
+                } while (moved);
+
             } else {
-                holdingTrack.enqueue(input[i]);
-                System.out.println("Move car " + input[i] + " to holding track");
-                i++;
-            }
 
-            while (!holdingTrack.isEmpty() &&
-                    holdingTrack.peek() == expected) {
+                int c = input[i];
+                int bestTrack = -1;
+                int bestLast = 0;
 
-                System.out.println("Move car " + holdingTrack.dequeue() + " from holding to output");
-                expected++;
+                for (int j = 0; j < k; j++) {
+
+                    if (!track[j].isEmpty()) {
+
+                        int lastCar = track[j].getRear();
+
+                        if (c < lastCar && lastCar > bestLast) {
+                            bestLast = lastCar;
+                            bestTrack = j;
+                        }
+
+                    } else if (bestTrack == -1) {
+                        bestTrack = j;
+                    }
+                }
+
+                if (bestTrack == -1) {
+                    return false;
+                }
+
+                track[bestTrack].enqueue(c);
+
+                System.out.println("Move car " + c +
+                        " from input track to holding track " + (bestTrack + 1));
             }
         }
 
-        return expected == n + 1;
+        return true;
     }
 
     static class Point {

@@ -5,10 +5,24 @@ public class Linked {
         head = head.insert(30, 1, head);
         head = head.insert(0, 0, head);
         head = head.insert(20, 1, head);
+        head=head.insert(33, 2, head);
+        head=head.insert(32, 3, head);
+        head=head.insert(36, 4, head);
+        head=head.insert(31, 5, head);
+        head=head.insert(23, 6, head);
+        head=head.insert(34, 7, head);
+        head=head.insert(38, 8, head);
+
 
         System.out.println(head.size(head));
         System.out.println(head.isempty(head));
         head.display(head);
+        
+        Node temp4=head;
+        while(temp4!=null){
+            if(temp4.data%2!=0 && )
+        }
+
     }
 }
 
@@ -17,6 +31,10 @@ class Node{
     int data;
     Node next;
 
+    public Node() {
+    }
+
+    
     Node(int data){
         this.data = data;
     }
